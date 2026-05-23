@@ -4,8 +4,6 @@ import numpy as np
 import joblib
 import plotly.express as px
 import os
-import json
-from urllib.request import urlopen
 
 # Load the saved model and encoders
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +11,7 @@ model = joblib.load(os.path.join(BASE_DIR, 'wildfire_model.pkl'))
 le_cause = joblib.load(os.path.join(BASE_DIR, 'le_cause.pkl'))
 le_state = joblib.load(os.path.join(BASE_DIR, 'le_state.pkl'))
 
-# State coordinates for default values
+# State coordinates for auto-filling
 state_coords = {
     'AL': (32.8, -86.8), 'AK': (64.0, -153.0), 'AZ': (34.3, -111.7),
     'AR': (34.8, -92.2), 'CA': (37.2, -119.5), 'CO': (39.0, -105.5),
@@ -41,18 +39,6 @@ month_names = {
     'September': 9, 'October': 10, 'November': 11, 'December': 12
 }
 
-# Function to look up coordinates from city/zip
-def lookup_location(query):
-    try:
-        url = f"https://nominatim.openstreetmap.org/search?q={query}&countrycodes=us&format=json&limit=1"
-        req = urlopen(url)
-        data = json.loads(req.read().decode())
-        if data:
-            return float(data[0]['lat']), float(data[0]['lon']), data[0].get('display_name', '')
-    except:
-        pass
-    return None, None, None
-
 # App setup
 st.set_page_config(page_title="Wildfire Risk Predictor", page_icon="🔥", layout="wide")
 st.title("🔥 Wildfire Risk Predictor")
@@ -67,21 +53,9 @@ with col1:
     state = st.selectbox("State", sorted(le_state.classes_))
     default_lat, default_lon = state_coords.get(state, (37.0, -100.0))
     
-    # City/zip lookup
-    location_input = st.text_input("🔍 Search by city or zip code", placeholder="e.g. Atlanta, GA or 30301")
-    
-    if location_input:
-        found_lat, found_lon, found_name = lookup_location(location_input)
-        if found_lat:
-            default_lat = found_lat
-            default_lon = found_lon
-            st.success(f"📍 Found: {found_name}")
-        else:
-            st.error("Location not found — try a different search")
-    
-    latitude = st.slider("Latitude", 24.0, 50.0, min(max(default_lat, 24.0), 50.0), 0.1)
-    longitude = st.slider("Longitude", -125.0, -66.0, min(max(default_lon, -125.0), -66.0), 0.1)
-    st.caption("Coordinates auto-fill from state or search — adjust sliders for precision")
+    latitude = st.slider("Latitude", 24.0, 50.0, default_lat, 0.1)
+    longitude = st.slider("Longitude", -125.0, -66.0, default_lon, 0.1)
+    st.caption("Coordinates auto-fill from state selection")
 
 with col2:
     st.subheader("📅 Conditions")
