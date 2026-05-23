@@ -5,9 +5,11 @@ import joblib
 import plotly.express as px
 
 # Load the saved model and encoders
-model = joblib.load('wildfire_model.pkl')
-le_cause = joblib.load('le_cause.pkl')
-le_state = joblib.load('le_state.pkl')
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model = joblib.load(os.path.join(BASE_DIR, 'wildfire_model.pkl'))
+le_cause = joblib.load(os.path.join(BASE_DIR, 'le_cause.pkl'))
+le_state = joblib.load(os.path.join(BASE_DIR, 'le_state.pkl'))
 
 # App title and description
 st.set_page_config(page_title="Wildfire Risk Predictor", page_icon="🔥", layout="wide")
