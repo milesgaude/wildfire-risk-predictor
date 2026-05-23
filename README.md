@@ -8,7 +8,7 @@ A machine learning web application that predicts wildfire risk levels across the
 
 ## Overview
 
-Wildfires cause billions of dollars in damage annually across the US. This tool uses historical data from the US Forest Service (1992–2015) to predict wildfire risk levels — Low, Medium, High, or Extreme — based on geographic and temporal features.
+Wildfires cause billions of dollars in damage annually across the US. This tool uses historical data from the US Forest Service (1992–2015) to predict wildfire risk levels - Low, Medium, High, or Extreme — based on geographic and temporal features.
 
 Users input a state, coordinates, time of year, and fire cause, and the model returns a risk prediction with a confidence breakdown across all four levels.
 
@@ -24,7 +24,7 @@ Users input a state, coordinates, time of year, and fire cause, and the model re
 
 **Model**
 - Algorithm: Random Forest Classifier (50 trees, max depth 15)
-- Addressed class imbalance using custom class weights — High fires weighted 10x, Extreme fires weighted 25x
+- Addressed class imbalance using custom class weights - High fires weighted 10x, Extreme fires weighted 25x
 - Trained on 400,000 samples, tested on 100,000 holdout samples
 - Accuracy: 71.6%
 
